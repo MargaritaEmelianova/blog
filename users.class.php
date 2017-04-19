@@ -1,46 +1,58 @@
 <?php
-
+define('SALT_LENGTH', 9);
 class users
 {
-    private $id;
+
     private $login;
     private $email;
-    private $hash;
-    private $firstname;
-    private $surname;
+    private $fullname;
 
-    function __construct()
+
+    function __construct($n, $email, $fn)
     {
+        $this->login = $n;
+        $this->email = $email;
+        $this->fullname = $fn;
     }
 
-    function getID()
+    public function setName($newName)
     {
-        return $this->id;
+        $this->fullname = $newName;
     }
 
-    function getLogin()
+    public function getLogin()
     {
         return $this->login;
     }
 
-    function getEmail()
+    public function getEmail()
     {
         return $this->email;
     }
 
-    function getHash()
+    public function getName()
     {
-        return $this->hash;
+        return $this->fullname;
     }
 
-    function getFirstname()
-    {
-        return $this->firstname;
-    }
 
-    function getSurname()
+    public static function login($db, $login_post)
     {
-        return $this->surname;
-    }
 
+        $stmt = $db->prepare("SELECT fistname, surname, hash FROM users WHERE login = : login");
+        $stmt->bindParam(':login', $login_post, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($rad = $stmt->fetch()) {
+            $hash = $rad["hash"];
+            $firstname = $rad["firstname"];
+            $surname = $rad["surname"];
+        }
+        if (password_verify($_POST['password'], $hash)) {
+            $_SESSION['signed in'] = true;
+            $_SESSION['user'] = new Users($login_post, $firstname . " " . $surname);
+            return true;
+        } else return false;
+
+
+    }
 }

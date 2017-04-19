@@ -1,7 +1,7 @@
 <?php
 
 
-class Comments
+class Comment
 {
     private $id;
     private $author;

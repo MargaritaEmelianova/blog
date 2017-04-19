@@ -2,17 +2,16 @@
 
 session_start();
 if (isset($_POST['send'])) {
-    //sjekk om brukernavn og passord er riktig
+
     if ($_POST['login'] == "dayaana" && $_POST['password'] == "test123") {
         $_SESSION['firstname'] = ucfirst($_POST['user']);
-        $_SESSION['innlogget'] = true;
+        $_SESSION['signed in'] = true;
         include "intern.php";
     } else {
-        //kaller opp siden p� nytt igjen, dvs tvinger ny innlogging
         header("Location: {$_SERVER['PHP_SELF']}");
-        exit; //hindrer at koden under utf�res p� tross av redirect
+        exit;
     }
-}//slutt if, knapp trykket
+}
 else {
     //skal vise skjemaet
     ?>
@@ -33,5 +32,5 @@ else {
         </table>
     </form>
     <?php
-}//slutt else
+}
 ?>
